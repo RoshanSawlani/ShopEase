@@ -1,0 +1,89 @@
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
+import loginIcons from '../assest/userlogin.png'
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
+const SignUp = () => {
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [data,setData] = useState({
+        email:"",
+        password:"",
+        name:"",
+        confirmPassword:"",
+        profilePic:"",
+    }) 
+
+    const handleOnChange = (e) =>{
+        const {name,value} = e.target
+        setData((preve)=>{
+            return{
+                ...preve,
+                [name]: value
+            }
+        })
+    }
+
+    const handleSubmit = (e)=>{
+        e.preventDefault()
+    }
+
+    console.log("data login",data)
+    return (
+        <section id='signup'>
+            <div className="mx-auto container p-4">
+                <div className='bg-white p-5 w-full max-w-sm mx-auto'>
+                    <div className='w-20 h-30 mx-auto'>
+                        <img src={loginIcons} alt="loginicon" />
+                    </div>
+                    <form className='pt-6 flex flex-col gap-2' onSubmit={handleSubmit}>
+                        <div className='grid'>
+                            <label htmlFor="">Name : </label>
+                            <div className='bg-slate-100 p-2'>
+                                <input type="text" placeholder='enter your name' name='name' value={data.name} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' />
+                            </div>
+                        </div>
+                        <div className='grid'>
+                            <label htmlFor="">Email : </label>
+                            <div className='bg-slate-100 p-2'>
+                                <input type="email" placeholder='enter email' name='email' value={data.email} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="">Password : </label>
+                            <div className='bg-slate-100 p-2 flex'>
+                                <input type={showPassword ? "text" : 'password'} placeholder='enter password' name='password' value={data.password} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' />
+                                <div className='cursor-pointer text-xl' onClick={() => setShowPassword((preve) => !preve)}>
+                                    <span>
+                                        {
+                                            showPassword ? <FaEyeSlash /> : <FaEye />
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div>
+                            <label htmlFor="">Confirm Password : </label>
+                            <div className='bg-slate-100 p-2 flex'>
+                                <input type={showConfirmPassword ? "text" : 'password'} placeholder='enter confirm password' name='confirmPassword' value={data.confirmPassword} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' />
+                                <div className='cursor-pointer text-xl' onClick={() => setShowConfirmPassword((preve) => !preve)}>
+                                    <span>
+                                        {
+                                            showConfirmPassword ? <FaEyeSlash /> : <FaEye />
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <button className='hover:bg-green-700 bg-green-600 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6'>Sign Up</button>
+                    </form>
+                    <p className='my-5'>Already have account ? <Link className='text-green-600 hover:underline hover:text-green-700' to={'/login'}>Login</Link> </p>
+                </div>
+            </div>
+        </section>
+    )
+}
+
+export default SignUp
