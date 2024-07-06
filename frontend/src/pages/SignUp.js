@@ -2,57 +2,81 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import loginIcons from '../assest/userlogin.png'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import imageTobase64 from '../helpers/imageTobase64';
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [data,setData] = useState({
-        email:"",
-        password:"",
-        name:"",
-        confirmPassword:"",
-        profilePic:"",
-    }) 
+    const [data, setData] = useState({
+        email: "",
+        password: "",
+        name: "",
+        confirmPassword: "",
+        profilePic: "",
+    })
 
-    const handleOnChange = (e) =>{
-        const {name,value} = e.target
-        setData((preve)=>{
-            return{
+    const handleOnChange = (e) => {
+        const { name, value } = e.target
+        setData((preve) => {
+            return {
                 ...preve,
                 [name]: value
             }
         })
     }
 
-    const handleSubmit = (e)=>{
+    const handleUploadPic = async(e)=>{
+        const file = e.target.files[0]
+        const imagePic = await imageTobase64(file)
+        
+        setData((preve)=>{
+            return{
+            ...preve,
+            profilePic:imagePic
+        }
+        })
+    }
+
+    const handleSubmit = (e) => {
         e.preventDefault()
     }
 
-    console.log("data login",data)
+    console.log("data login", data)
     return (
         <section id='signup'>
             <div className="mx-auto container p-4">
                 <div className='bg-white p-5 w-full max-w-sm mx-auto'>
-                    <div className='w-20 h-30 mx-auto'>
-                        <img src={loginIcons} alt="loginicon" />
+
+                    <div className='w-20 h-30 mx-auto relative overflow-auto rounded-full'>
+                        <div>
+                            <img src={data.profilePic || loginIcons} alt="loginicon" />
+                        </div>
+                        <form>
+                            <label>
+                                <div className='text-xs bg-opacity-50 pb-4 pt-1 cursor-pointer bg-slate-200 py-3 text-center absolute bottom-0 w-full'>
+                                    Upload Pic
+                                </div>
+                                <input type="file" className='hidden' onChange={handleUploadPic}/>
+                            </label>
+                        </form>
                     </div>
                     <form className='pt-6 flex flex-col gap-2' onSubmit={handleSubmit}>
                         <div className='grid'>
                             <label htmlFor="">Name : </label>
                             <div className='bg-slate-100 p-2'>
-                                <input type="text" placeholder='enter your name' name='name' value={data.name} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' />
+                                <input type="text" placeholder='enter your name' name='name' value={data.name} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required/>
                             </div>
                         </div>
                         <div className='grid'>
                             <label htmlFor="">Email : </label>
                             <div className='bg-slate-100 p-2'>
-                                <input type="email" placeholder='enter email' name='email' value={data.email} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' />
+                                <input type="email" placeholder='enter email' name='email' value={data.email} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required/>
                             </div>
                         </div>
                         <div>
                             <label htmlFor="">Password : </label>
                             <div className='bg-slate-100 p-2 flex'>
-                                <input type={showPassword ? "text" : 'password'} placeholder='enter password' name='password' value={data.password} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' />
+                                <input type={showPassword ? "text" : 'password'} placeholder='enter password' name='password' value={data.password} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required/>
                                 <div className='cursor-pointer text-xl' onClick={() => setShowPassword((preve) => !preve)}>
                                     <span>
                                         {
@@ -61,12 +85,12 @@ const SignUp = () => {
                                     </span>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div>
                             <label htmlFor="">Confirm Password : </label>
                             <div className='bg-slate-100 p-2 flex'>
-                                <input type={showConfirmPassword ? "text" : 'password'} placeholder='enter confirm password' name='confirmPassword' value={data.confirmPassword} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' />
+                                <input type={showConfirmPassword ? "text" : 'password'} placeholder='enter confirm password' name='confirmPassword' value={data.confirmPassword} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required/>
                                 <div className='cursor-pointer text-xl' onClick={() => setShowConfirmPassword((preve) => !preve)}>
                                     <span>
                                         {
@@ -75,7 +99,7 @@ const SignUp = () => {
                                     </span>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <button className='hover:bg-green-700 bg-green-600 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6'>Sign Up</button>
                     </form>
