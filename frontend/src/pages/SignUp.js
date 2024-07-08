@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import loginIcons from '../assest/userlogin.png'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import imageTobase64 from '../helpers/imageTobase64';
+import SummaryApi from '../common';
+import { toast } from 'react-toastify';
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false)
@@ -14,6 +16,7 @@ const SignUp = () => {
         confirmPassword: "",
         profilePic: "",
     })
+    const navigate = useNavigate()
 
     const handleOnChange = (e) => {
         const { name, value } = e.target
@@ -25,23 +28,40 @@ const SignUp = () => {
         })
     }
 
-    const handleUploadPic = async(e)=>{
+    const handleUploadPic = async (e) => {
         const file = e.target.files[0]
         const imagePic = await imageTobase64(file)
-        
-        setData((preve)=>{
-            return{
-            ...preve,
-            profilePic:imagePic
-        }
+
+        setData((preve) => {
+            return {
+                ...preve,
+                profilePic: imagePic
+            }
         })
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        if (data.password === data.confirmPassword) {
+            const dataResponse = await fetch(SummaryApi.signUp.url, {
+                method: SummaryApi.signUp.method,
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify(data)
+            })
+            const dataApi = await dataResponse.json()
+            if(dataApi.success){
+                toast.success(dataApi.message)
+                navigate('/login')
+            }
+            if(dataApi.error){
+                toast.error(dataApi.message)
+            }
+        }else{
+            console.log("Please check password and confirm password")
+        }
     }
-
-    console.log("data login", data)
     return (
         <section id='signup'>
             <div className="mx-auto container p-4">
@@ -56,7 +76,7 @@ const SignUp = () => {
                                 <div className='text-xs bg-opacity-50 pb-4 pt-1 cursor-pointer bg-slate-200 py-3 text-center absolute bottom-0 w-full'>
                                     Upload Pic
                                 </div>
-                                <input type="file" className='hidden' onChange={handleUploadPic}/>
+                                <input type="file" className='hidden' onChange={handleUploadPic} />
                             </label>
                         </form>
                     </div>
@@ -64,19 +84,19 @@ const SignUp = () => {
                         <div className='grid'>
                             <label htmlFor="">Name : </label>
                             <div className='bg-slate-100 p-2'>
-                                <input type="text" placeholder='enter your name' name='name' value={data.name} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required/>
+                                <input type="text" placeholder='enter your name' name='name' value={data.name} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required />
                             </div>
                         </div>
                         <div className='grid'>
                             <label htmlFor="">Email : </label>
                             <div className='bg-slate-100 p-2'>
-                                <input type="email" placeholder='enter email' name='email' value={data.email} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required/>
+                                <input type="email" placeholder='enter email' name='email' value={data.email} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required />
                             </div>
                         </div>
                         <div>
                             <label htmlFor="">Password : </label>
                             <div className='bg-slate-100 p-2 flex'>
-                                <input type={showPassword ? "text" : 'password'} placeholder='enter password' name='password' value={data.password} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required/>
+                                <input type={showPassword ? "text" : 'password'} placeholder='enter password' name='password' value={data.password} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required />
                                 <div className='cursor-pointer text-xl' onClick={() => setShowPassword((preve) => !preve)}>
                                     <span>
                                         {
@@ -90,7 +110,7 @@ const SignUp = () => {
                         <div>
                             <label htmlFor="">Confirm Password : </label>
                             <div className='bg-slate-100 p-2 flex'>
-                                <input type={showConfirmPassword ? "text" : 'password'} placeholder='enter confirm password' name='confirmPassword' value={data.confirmPassword} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required/>
+                                <input type={showConfirmPassword ? "text" : 'password'} placeholder='enter confirm password' name='confirmPassword' value={data.confirmPassword} onChange={handleOnChange} className='w-full h-full outline-none bg-transparent' required />
                                 <div className='cursor-pointer text-xl' onClick={() => setShowConfirmPassword((preve) => !preve)}>
                                     <span>
                                         {
