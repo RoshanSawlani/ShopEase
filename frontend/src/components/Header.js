@@ -54,7 +54,7 @@ const Header = () => {
                     
                     <div className='absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded'>
                         <nav>
-                            <Link to={"admin-panel"} className='whitespace-nowrap hover:bg-slate-100 p-2' onClick={()=>setMenuDisplay(preve=> !preve)}>Admin Panel</Link>
+                            <Link to={"admin-panel"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={()=>setMenuDisplay(preve=> !preve)}>Admin Panel</Link>
                         </nav>
                     </div>
                     )
@@ -69,7 +69,6 @@ const Header = () => {
                     </div>
                     <div>
                         {user?._id ? (<button to={'/login'} onClick={handleLogout} className='px-3 py-1 rounded-full text-white bg-green-600 hover:bg-green-700'>Logout</button>):(<Link to={'/login'} className='px-3 py-1 rounded-full text-white bg-green-600 hover:bg-green-700'>Login</Link>)}
-                        
                     </div>
                 </div>
             </div>
