@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import UploadProduct from '../components/UploadProduct'
 import SummaryApi from '../common'
+import AdminProductCard from '../components/AdminProductCard'
 
 const AllProducts = () => {
   const [openUploadProduct,setOpenUploadProduct] = useState(false)
@@ -26,10 +27,7 @@ const AllProducts = () => {
         {
           allProduct.map((product,index)=>{
             return (
-              <div className='bg-white p-4 rounded'>
-                <img src={product?.productImage[0]} width={120} height={120} alt='productImage' />
-                <h1>{product.productName}</h1>
-              </div> 
+              <AdminProductCard data={product} key={index + "allProduct"} fetchdata={fetchAllProduct}/>
             )
           })
         }
@@ -41,7 +39,7 @@ const AllProducts = () => {
       {/* Upload Product component */}
       {
         openUploadProduct && (
-          <UploadProduct onClose={()=>setOpenUploadProduct(false)}/>
+          <UploadProduct onClose={()=>setOpenUploadProduct(false)} fetchData={fetchAllProduct}/>
         )
       }
     </div>
