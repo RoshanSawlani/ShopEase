@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import image1 from '../assest/banner/img1.webp'
 import image2 from '../assest/banner/img2.webp'
 import image3 from '../assest/banner/img3.jpg'
@@ -31,9 +31,20 @@ const BannerProduct = () => {
         setCurrentImage(prev => prev - 1)
     }
     }
+    useEffect(()=>{
+        const interval = setInterval(()=>{
+            if(desktopImages.length-1 > currentImage){
+                nextImage()
+            }else{
+                setCurrentImage(0)
+            }
+        },3000)
+        return () => clearInterval(interval)
+    },[currentImage])
+
     return (
         <div className='container mx-auto px-4 rounded'>
-            <div className='h-60 md:h-72 w-full bg-slate-200 relative'>
+            <div className='h-56 md:h-72 w-full bg-slate-200 relative'>
                 <div className='absolute z-10 w-full h-full md:flex items-center hidden'>
                     <div className='flex justify-between w-full text-2xl'>
                     <button onClick={prevImage} className='bg-white shadow-md rounded-full p-1'><FaAngleLeft/></button>
@@ -41,12 +52,26 @@ const BannerProduct = () => {
                     </div>
                     
                 </div>
-                <div className='flex h-full w-full overflow-hidden'>
+                {/* Desktop and tablet version */}
+                <div className='hidden md:flex h-full w-full overflow-hidden'>
                 {
                     desktopImages.map((imageURL, index) => {
                         return (
                             <div className='w-full h-full min-w-full min-h-full transition-all' key={imageURL} style={{transform:`translateX(-${currentImage * 100}%)`}}>
                                 <img src={imageURL} alt="bannerimage" className='w-full h-full' />
+                            </div>
+                        )
+                    })
+                }
+                </div>
+
+                {/* Mobile version */}
+                <div className='flex h-full w-full overflow-hidden md:hidden'>
+                {
+                    mobileImages.map((imageURL, index) => {
+                        return (
+                            <div className='w-full h-full min-w-full min-h-full transition-all' key={imageURL} style={{transform:`translateX(-${currentImage * 100}%)`}}>
+                                <img src={imageURL} alt="bannerimage" className='w-full h-full object-cover' />
                             </div>
                         )
                     })
