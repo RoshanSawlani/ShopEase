@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import SummaryApi from '../common'
 import Context from '../context'
 import displayINRCurrency from '../helpers/displayCurrency'
+import { MdDelete } from "react-icons/md";
 
 const Cart = () => {
     const [data, setData] = useState([])
@@ -26,6 +27,63 @@ const Cart = () => {
     useEffect(() => {
         fetchData()
     }, [])
+
+    const increaseQty = async(id,qty) =>{
+        const response = await fetch(SummaryApi.updateCartProduct.url,{
+            method:SummaryApi.updateCartProduct.method,
+            credentials:"include",
+            headers:{
+                "content-type":"application/json",
+            },
+            body:JSON.stringify({
+                _id:id,
+                quantity:qty+1
+            })
+        })
+        const responseData = await response.json()
+        if(responseData.success){
+            fetchData()
+        }
+    }
+
+    const decreaseQty = async(id,qty) =>{
+        if(qty>=2){
+            const response = await fetch(SummaryApi.updateCartProduct.url,{
+                method:SummaryApi.updateCartProduct.method,
+                credentials:"include",
+                headers:{
+                    "content-type":"application/json",
+                },
+                body:JSON.stringify({
+                    _id:id,
+                    quantity:qty-1
+                })
+            })
+            const responseData = await response.json()
+            if(responseData.success){
+                fetchData()
+            }
+        }
+    }
+
+    const deleteCartProduct = async(id)=>{
+        const response = await fetch(SummaryApi.deleteCartProduct.url,{
+            method:SummaryApi.deleteCartProduct.method,
+            credentials:"include",
+            headers:{
+                "content-type":"application/json",
+            },
+            body:JSON.stringify({
+                _id:id
+            })
+        })
+        const responseData = await response.json()
+        if(responseData.success){
+            fetchData()
+            context.fetchUserAddToCart()
+        }
+    }
+
     return (
         <div className='container mx-auto'>
             <div className='text-center text-lg my-3'>
@@ -56,14 +114,18 @@ const Cart = () => {
                                     <div className='w-32 h-32 bg-slate-200'>
                                         <img src={product?.productId?.productImage[0]} className='w-full h-full object-scale-down mix-blend-multiply' alt="" />
                                     </div>
-                                    <div className='px-4 py-2'>
+                                    <div className='px-4 py-2 relative'>
+                                        {/* delete product */}
+                                        <div className='absolute right-0 text-green-600 cursor-pointer hover:bg-green-600 hover:text-white rounded-full p-2' onClick={()=>deleteCartProduct(product?._id)}>
+                                            <MdDelete/>
+                                        </div>
                                         <h2 className='text-lg lg:text-xl text-ellipsis line-clamp-1'>{product?.productId?.productName}</h2>
                                         <p className='capitalize text-slate-500'>{product?.productId?.category}</p>
-                                        <p>{displayINRCurrency(product?.productId?.sellingPrice)}</p>
+                                        <p className='text-green-600 font-medium text-lg'>{displayINRCurrency(product?.productId?.sellingPrice)}</p>
                                         <div className='flex items-center gap-3 mt-1'>
-                                            <button className='border border-green-600 hover:bg-green-600 hover:text-white text-green-600 w-6 h-6 flex justify-center items-center rounded'>-</button>
+                                            <button className='border border-green-600 hover:bg-green-600 hover:text-white text-green-600 w-6 h-6 flex justify-center items-center rounded' onClick={()=>decreaseQty(product?._id,product?.quantity)}>-</button>
                                             <span>{product?.quantity}</span>
-                                            <button className='border border-green-600 hover:bg-green-600 hover:text-white text-green-600 w-6 h-6 flex justify-center items-center rounded'>+</button>
+                                            <button className='border border-green-600 hover:bg-green-600 hover:text-white text-green-600 w-6 h-6 flex justify-center items-center rounded' onClick={()=>increaseQty(product?._id,product?.quantity)}>+</button>
                                         </div>
                                     </div>
                                 </div>
