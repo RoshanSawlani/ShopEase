@@ -84,6 +84,10 @@ const Cart = () => {
         }
     }
 
+    const totalQty = data.reduce((previousValue,currentValue)=>previousValue+currentValue.quantity,0)
+    const totalPrice = data.reduce((previousValue,currentValue)=>previousValue+(currentValue.quantity * currentValue?.productId?.sellingPrice),0)
+
+
     return (
         <div className='container mx-auto'>
             <div className='text-center text-lg my-3'>
@@ -121,7 +125,10 @@ const Cart = () => {
                                         </div>
                                         <h2 className='text-lg lg:text-xl text-ellipsis line-clamp-1'>{product?.productId?.productName}</h2>
                                         <p className='capitalize text-slate-500'>{product?.productId?.category}</p>
+                                        <div className='flex items-center justify-between'>
                                         <p className='text-green-600 font-medium text-lg'>{displayINRCurrency(product?.productId?.sellingPrice)}</p>
+                                        <p className='text-slate-600 font-semibold text-lg'>{displayINRCurrency(product?.productId?.sellingPrice * product?.quantity)}</p>
+                                        </div>
                                         <div className='flex items-center gap-3 mt-1'>
                                             <button className='border border-green-600 hover:bg-green-600 hover:text-white text-green-600 w-6 h-6 flex justify-center items-center rounded' onClick={()=>decreaseQty(product?._id,product?.quantity)}>-</button>
                                             <span>{product?.quantity}</span>
@@ -142,8 +149,17 @@ const Cart = () => {
 
                             </div>
                         ) : (
-                            <div className='h-36 bg-slate-200'>
-                                Total
+                            <div className='h-36 bg-white'>
+                                <h2 className='text-white bg-green-600 px-4 py-1'>Summary</h2>
+                                <div className='flex items-center justify-between px-4 gap-2 font-medium text-lg text-slate-600'>
+                                    <p>Quantity</p>
+                                    <p>{totalQty}</p>
+                                </div>
+                                <div className='flex items-center justify-between px-4 gap-2 font-medium text-lg text-slate-600'>
+                                    <p>Total Price</p>
+                                    <p>{displayINRCurrency(totalPrice)}</p>
+                                </div>
+                                <button className='bg-blue-600 p-2 my-4 text-white w-full'>Payment</button>
                             </div>
                         )
                     }
