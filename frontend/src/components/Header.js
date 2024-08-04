@@ -3,7 +3,7 @@ import Logo from './Logo'
 import { GrSearch } from "react-icons/gr";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import SummaryApi from '../common';
 import { toast } from 'react-toastify';
@@ -17,6 +17,7 @@ const Header = () => {
     const dispatch = useDispatch()
     const [menuDisplay, setMenuDisplay] = useState(false)
     const context = useContext(Context)
+    const navigate = useNavigate()
 
     const handleLogout = async () => {
         const fetchData = await fetch(SummaryApi.logout_user.url, {
@@ -32,7 +33,14 @@ const Header = () => {
             toast.error(data.message)
         }
     }
-    console.log("header add to cart count", context)
+    const handleSearch = (e) =>{
+        const {value} = e.target
+        if(value){
+            navigate(`/search?q=${value}`)
+        }else{
+            navigate(`/search`)
+        }
+    }
     return (
         <header className='h-16 shadow-md bg-white fixed w-full z-40'>
             <div className="h-full container mx-auto flex items-center px-4 justify-between">
@@ -40,7 +48,7 @@ const Header = () => {
                     <Link to={'/'}><Logo /></Link>
                 </div>
                 <div className='hidden lg:flex items-center w-full justify-between max-w-sm border rounded-full focus-within:shadow pl-2'>
-                    <input type="text" placeholder='search product here...' className='w-full outline-none' />
+                    <input type="text" placeholder='search product here...' className='w-full outline-none' onChange={handleSearch}/>
                     <div className='text-lg min-w-[50px] h-8 bg-green-600 flex items-center justify-center rounded-r-full text-white'>
                         <GrSearch />
                     </div>
