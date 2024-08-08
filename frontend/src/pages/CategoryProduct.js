@@ -20,7 +20,8 @@ const CategoryProduct = () => {
 
     const [selectCategory,setSelectCategory] = useState(urlCategoryListObject)
     const [filterCategoryList,setFilterCategoryList] = useState([])
-
+    const [sortBy,setSortBy] = useState("")
+    
 
     const fetchData = async () => {
         const response = await fetch(SummaryApi.filterProduct.url,{
@@ -67,7 +68,21 @@ const CategoryProduct = () => {
         navigate('/product-category?'+urlFormat.join(""))
         
     },[selectCategory])
-    
+
+    const handleOnChangeSortBy = (e)=>{
+        const {value} = e.target
+        setSortBy(value)
+        if(value === 'asc'){
+            setData(preve=>preve.sort((a,b)=>a.sellingPrice-b.sellingPrice))
+        }
+        if(value === 'dsc'){
+            setData(preve=>preve.sort((a,b)=>b.sellingPrice-a.sellingPrice))
+        }
+    } 
+    useEffect(()=>{
+        
+    },[sortBy])
+
     return (
         <div className="container mx-auto p-4">
             {/* desktop version */}
@@ -79,11 +94,11 @@ const CategoryProduct = () => {
                         <h3 className='text-base uppercase font-medium text-slate-500 border-b pb-1 border-slate-300'>Sort by</h3>
                         <form className='text-sm flex-col gap-2 py-2'>
                             <div className='flex items-center gap-3'>
-                                <input type="radio" name="sortBy" />
+                                <input type="radio" name="sortBy" value={"asc"} checked={sortBy === 'asc'} onChange={handleOnChangeSortBy} />
                                 <label>Price - Low to High</label>
                             </div>
                             <div className='flex items-center gap-3'>
-                                <input type="radio" name="sortBy" />
+                                <input type="radio" name="sortBy" value={"dsc"} checked={sortBy === 'dsc'} onChange={handleOnChangeSortBy}/>
                                 <label>Price - High to Low</label>
                             </div>
                         </form>
