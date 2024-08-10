@@ -89,6 +89,21 @@ const Cart = () => {
         }
     }
 
+    const handlePayment = async()=>{
+        const response = await fetch(SummaryApi.payment.url,{
+            method:SummaryApi.payment.method,
+            credentials:'include',
+            headers:{
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                cartItems:data
+            })
+        })
+        const responseData = await response.json()
+        console.log("payment response",responseData)
+    }
+
     const totalQty = data.reduce((previousValue,currentValue)=>previousValue+currentValue.quantity,0)
     const totalPrice = data.reduce((previousValue,currentValue)=>previousValue+(currentValue.quantity * currentValue?.productId?.sellingPrice),0)
 
@@ -147,7 +162,9 @@ const Cart = () => {
                     }
                 </div>
                 {/* Summary */}
-                <div className='mt-5 lg:mt-0 w-full max-w-sm'>
+                {
+                    data[0] && (
+                        <div className='mt-5 lg:mt-0 w-full max-w-sm'>
                     {
                         loading ? (
                             <div className='h-36 bg-slate-200 border border-slate-300 animate-pulse'>
@@ -164,11 +181,14 @@ const Cart = () => {
                                     <p>Total Price</p>
                                     <p>{displayINRCurrency(totalPrice)}</p>
                                 </div>
-                                <button className='bg-blue-600 p-2 my-4 text-white w-full'>Payment</button>
+                                <button className='bg-blue-600 p-2 my-4 text-white w-full' onClick={handlePayment}>Payment</button>
                             </div>
                         )
                     }
                 </div>
+                    )
+                }
+                
 
             </div>
         </div>
