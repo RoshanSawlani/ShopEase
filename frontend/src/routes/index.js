@@ -12,54 +12,65 @@ import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import SearchProduct from "../pages/SearchProduct";
 
+import Cancel from "../pages/Cancel";
+import Success from "../pages/Success";
+
 const router = createBrowserRouter([
     {
-        path:'/',
-        element:<App/>,
-        children:[
+        path: '/',
+        element: <App />,
+        children: [
             {
-                path:"",
-                element:<Home/>
+                path: "",
+                element: <Home />
             },
             {
-                path:"login",
-                element:<Login/>
+                path: "login",
+                element: <Login />
             },
             {
-                path:"forgot-password",
-                element:<ForgotPassword/>
+                path: "forgot-password",
+                element: <ForgotPassword />
             },
             {
-                path:"sign-up",
-                element:<SignUp/>
+                path: "sign-up",
+                element: <SignUp />
             },
             {
-                path:"product-category",
-                element:<CategoryProduct/>
+                path: "product-category",
+                element: <CategoryProduct />
             },
             {
-                path:"product/:id",
-                element:<ProductDetails/>
+                path: "product/:id",
+                element: <ProductDetails />
             },
             {
-                path:"cart",
-                element:<Cart/>
+                path: "cart",
+                element: <Cart />
             },
             {
-                path:"search",
-                element:<SearchProduct/>
+                path: "success",
+                element: <Success />
             },
             {
-                path:"admin-panel",
-                element:<AdminPanel/>,
-                children:[
+                path: "cancel",
+                element: <Cancel />
+            },
+            {
+                path: "search",
+                element: <SearchProduct />
+            },
+            {
+                path: "admin-panel",
+                element: <AdminPanel />,
+                children: [
                     {
-                        path:"all-users",
-                        element:<AllUsers/>
+                        path: "all-users",
+                        element: <AllUsers />
                     },
                     {
-                        path:"all-products",
-                        element:<AllProducts/>
+                        path: "all-products",
+                        element: <AllProducts />
                     }
                 ]
             }
